@@ -1,7 +1,7 @@
 import express from "express";
 import { expressMiddleware } from "@apollo/server/express4";
 import createApolloGraphqlServer from "./graphql";
-// import UserService from "./services/user";
+import UserService from "./services/user";
 
 async function init() {
     const app = express();
@@ -16,17 +16,17 @@ async function init() {
     app.use(
         "/graphql",
         expressMiddleware(await createApolloGraphqlServer(), {
-            // context: async ({ req }) => {
-            //     // @ts-ignore
-            //     const token = req.headers["token"];
+            context: async ({ req }) => {
+                // @ts-ignore
+                const token = req.headers["token"];
 
-            //     try {
-            //         const user = UserService.decodeJWTToken(token as string);
-            //         return { user };
-            //     } catch (error) {
-            //         return {};
-            //     }
-            // },
+                try {
+                    const user = UserService.decodeJWTToken(token as string);
+                    return { user };
+                } catch (error) {
+                    return {};
+                }
+            },
         })
     );
 
